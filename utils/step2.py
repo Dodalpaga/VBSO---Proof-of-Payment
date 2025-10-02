@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 def step2_map_columns():
     
@@ -86,4 +87,5 @@ def step2_map_columns():
                 icon="✅",
                 duration="long"
             )
+            time.sleep(2)
             st.rerun()
