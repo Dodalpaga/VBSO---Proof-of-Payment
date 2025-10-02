@@ -14,8 +14,6 @@ def step4_generate_invoice():
     
     st.header("4️⃣ Génération de la facture")
     
-    st.markdown(st.session_state.selected_member)
-    
     if st.session_state.selected_member is not None:
     
         df = st.session_state.df

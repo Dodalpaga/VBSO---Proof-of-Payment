@@ -43,8 +43,29 @@ def main_app():
         
         ### Ingestion :
 
-        1. **Chargement du fichier** : Téléchargez un fichier Excel contenant les informations des membres (nom, prénom, montant dû, etc.).
+        1. **Chargement du fichier** : Téléchargez et ingérez l'export excel de SportEasy contenant les informations des membres (nom, prénom, montant dû, etc.).
+        """)
+        
+        st.image("img/tuto/export_sporteasy.png")
+        
+        st.markdown("""
         2. **Configuration des colonnes** : Associez les colonnes de votre fichier aux champs requis pour le traitement.
+        """)
+        
+        st.image("img/tuto/validation_config.png")
+        
+        st.markdown("""
+        Les éléments essentiels à l'édition de la facture sont les suivants :
+        - Nom
+        - Prénom
+        - Montant dû
+        - Validation du paiement par le bureau
+        
+        Les éléments suivants sont optionnels mais peuvent servir de contexte :
+        - Moyen de paiement utilisé
+        - Statut du paiement : C'est un indicateur créé par SportEasy au moement du paiement via la cagnotte.
+        
+        Les addresses de livraison et facturation seront à renseigner plus tard.
         
         ### Edition :
         
