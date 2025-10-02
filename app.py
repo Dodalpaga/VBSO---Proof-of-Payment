@@ -65,6 +65,8 @@ def main_app():
             step2_map_columns()
 
     with tab3:
+        if st.session_state.step<=2:
+            st.info("Charger un extract de SportEasy et valider la cofiguration.")
         # Étape 3 : Rechercher un membre
         if st.session_state.step >= 3 and st.session_state.df is not None:
             step3_search_member()

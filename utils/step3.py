@@ -45,14 +45,12 @@ def step3_search_member():
         with col2:
             st.metric("Montant dû", f"{montant}€")
         with col3:
-            status_icon = "✅" if str(statut).lower() == "payé" else "⏳"
-            st.metric("Statut paiement", f"{status_icon} {statut}")
+            st.metric("Statut paiement", f"{statut}")
         with col4:
+            st.metric("Moyen de paiement", f"{moyen}")
+        with col5:
             valid_icon = "✅" if str(validation).lower() == "oui" else "❌"
             st.metric("Validation bureau", f"{valid_icon} {validation}")
-        with col5:
-            valid_icon = "❌" if pd.isna(moyen) else "✅"
-            st.metric("Moyen de paiement", f"{valid_icon} {moyen}")
         
         st.info(f"**Moyen de paiement:** {moyen}")
     
