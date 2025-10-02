@@ -1,0 +1,6 @@
+streamlit
+pandas
+phonenumbers
+python-docx
+docxtpl
+openpyxl
