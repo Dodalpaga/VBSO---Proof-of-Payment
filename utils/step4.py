@@ -1,9 +1,10 @@
 import streamlit as st
 import os
-from docxtpl import DocxTemplate
-from io import BytesIO
 import re
+import base64
 from datetime import datetime
+from utils.export_word import generer_facture_word
+from utils.export_pdf import generer_facture_pdf
 
 def step4_generate_invoice():
     
@@ -87,40 +88,53 @@ def step4_generate_invoice():
                     label_visibility="visible"
                 )
         
+        # Choix du format d'export
+        st.subheader("Format de la facture")
+        format_export = st.radio(
+            "Choisissez le format d'export :",
+            options=["PDF (.pdf)", "Word (.docx)"],
+            horizontal=True,
+            key="format_export"
+        )
+        
         # Vérifier si le template existe
-        template_path = "facture_template.docx"
+        if format_export == "Word (.docx)":
+            template_path = "facture_template.docx"
+        else:
+            template_path = "facture_template - empty.pdf"
+            
         template_exists = os.path.exists(template_path)
         
         if not template_exists:
             st.toast(
-                "Le fichier template 'facture_template.docx' est introuvable dans le même dossier que l'application.",
+                f"Le fichier template '{template_path}' est introuvable dans le même dossier que l'application.",
                 icon="❌",
                 duration="long"
             )
-            st.info("💡 Assurez-vous que le fichier 'facture_template.docx' se trouve dans le même répertoire que app.py")
+            st.info(f"💡 Assurez-vous que le fichier '{template_path}' se trouve dans le même répertoire que app.py")
             st.stop()
             
-        _, col, _ = st.columns([3,1,3])
+        # Bouton unique de génération et téléchargement
+        _, col, _ = st.columns([3, 1, 3])
         
         with col:
-        
-            if st.button("🎉 Générer la facture", type="primary", use_container_width=True):
+            if st.button(
+                "Générer la facture",
+                icon="🎉",
+                type="primary",
+                use_container_width=True,
+                key="generation_button"
+            ):
+                # Vérifier si les adresses sont remplies
                 if not (adresse_livraison and adresse_facturation):
-                    st.toast(
-                        "Erreur : Veuillez renseigner une adresse de livraison et une adresse de facturation.",
-                        icon="❌",
-                        duration="long"
-                    )
-                    st.stop()
-                try:
-                    # Charger le template depuis le fichier local
-                    doc = DocxTemplate(template_path)
-                    
-                    # Préparer le contexte
-                    contexte = {
+                    # Afficher un message d'erreur si les adresses manquent
+                    st.error("⚠️ Veuillez renseigner les deux adresses avant de générer la facture")
+                else:
+                    # Préparer les données
+                    donnees_facture = {
                         "nom": nom,
                         "prenom": prenom,
-                        "date_jour":datetime.today().strftime("%d/%m/%Y"),
+                        "date_jour": datetime.today().strftime("%d/%m/%Y"),
                         "montant_du": membre[mapping["Montant dû"]],
                         "moyen_paiement": membre[mapping["Moyen de paiement"]],
                         "statut_paiement": membre[mapping["Statut de paiement"]],
@@ -129,33 +143,30 @@ def step4_generate_invoice():
                         "adresse_livraison": adresse_livraison,
                     }
                     
-                    # Générer le document
-                    doc.render(contexte)
-                    
-                    # Sauvegarder dans un buffer
-                    buffer = BytesIO()
-                    doc.save(buffer)
-                    buffer.seek(0)
-                    
-                    # Proposer le téléchargement
-                    filename = f"facture_{clean_filename(nom)}_{clean_filename(prenom)}.docx"
-                    
-                    st.toast(
-                        "Facture générée avec succès!",
-                        icon="✅",
-                        duration="long"
-                    )
-                    st.download_button(
-                        label="📥 Télécharger la facture",
-                        data=buffer,
-                        file_name=filename,
-                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        use_container_width=True
-                    )
-                    
-                except Exception as e:
-                    st.toast(
-                        f"Erreur lors de la génération de la facture: {e}",
-                        icon="❌",
-                        duration="long"
-                    )
+                    try:
+                        # Générer selon le format choisi
+                        if format_export == "Word (.docx)":
+                            buffer = generer_facture_word(template_path, donnees_facture)
+                            extension = "docx"
+                            mime_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        else:
+                            buffer = generer_facture_pdf(template_path, donnees_facture)
+                            extension = "pdf"
+                            mime_type = "application/pdf"
+                        
+                        filename = f"facture_{clean_filename(nom)}_{clean_filename(prenom)}.{extension}"
+                        
+                        # Téléchargement direct
+                        st.download_button(
+                            label="Télécharger la facture",
+                            icon="⬇️",
+                            data=buffer,
+                            file_name=filename,
+                            mime=mime_type,
+                            type="primary",
+                            use_container_width=True,
+                            key="download_button"  # Unique key to avoid conflicts
+                        )
+                        
+                    except Exception as e:
+                        st.error(f"❌ Erreur lors de la génération: {str(e)}")
