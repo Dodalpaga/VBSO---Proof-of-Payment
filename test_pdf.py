@@ -16,7 +16,7 @@ can = canvas.Canvas(packet, pagesize=letter)
 
 
 can.setFont("Helvetica", 11)
-can.setFillColor(colors.blue)
+can.setFillColor(colors.black)
 text = "Adresse de livraison\nLigne2\nLigne3"
 y = 607
 for line in text.splitlines():
@@ -25,7 +25,7 @@ for line in text.splitlines():
 
 
 can.setFont("Helvetica", 11)
-can.setFillColor(colors.blue)
+can.setFillColor(colors.black)
 text = "Adresse de facturation\nLigne2\nLigne3"
 y = 607
 for line in text.splitlines():
@@ -68,14 +68,9 @@ can.setFillColor(colors.black)
 can.drawRightString(568, 735, "15/10/2025")
 
 
-can.setFont("Helvetica-Bold", 12)
+can.setFont("Helvetica-Bold", 16)
 can.setFillColor(colors.black)
-can.drawRightString(568, 765, "15/10/2025")
-
-
-can.setFont("Helvetica-Bold", 14)
-can.setFillColor(colors.black)
-can.drawRightString(568, 780, "N° FAC-042")
+can.drawRightString(568, 772, "N° FAC-2510-AITOL")
 
 
 can.save()

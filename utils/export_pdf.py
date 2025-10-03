@@ -41,7 +41,7 @@ def generer_facture_pdf(template_path, donnees):
         
         # === ADRESSE DE LIVRAISON ===
         can.setFont("Helvetica", 11)
-        can.setFillColor(colors.blue)
+        can.setFillColor(colors.black)
         y = 607
         for line in donnees["adresse_livraison"].splitlines():
             can.drawString(28, y, line)
@@ -49,7 +49,7 @@ def generer_facture_pdf(template_path, donnees):
         
         # === ADRESSE DE FACTURATION ===
         can.setFont("Helvetica", 11)
-        can.setFillColor(colors.blue)
+        can.setFillColor(colors.black)
         y = 607
         for line in donnees["adresse_facturation"].splitlines():
             can.drawString(286, y, line)
@@ -93,21 +93,13 @@ def generer_facture_pdf(template_path, donnees):
         can.setFont("Helvetica-Bold", 11)
         can.setFillColor(colors.black)
         can.drawRightString(568, 735, date_str)
-        
-        # Date d'échéance
-        can.setFont("Helvetica-Bold", 12)
-        can.setFillColor(colors.black)
-        can.drawRightString(568, 765, date_str)
-        
+
         # === NUMÉRO DE FACTURE ===
-        # Générer un numéro de facture basé sur le nom/prénom/date
-        from datetime import datetime
-        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
-        numero_facture = f"N° FAC-{date_obj.strftime('%y%m')}-{donnees['nom'][:3].upper()}{donnees['prenom'][:2].upper()}"
+        numero_facture = donnees["n_facture"]
         
-        can.setFont("Helvetica-Bold", 14)
+        can.setFont("Helvetica-Bold", 16)
         can.setFillColor(colors.black)
-        can.drawRightString(568, 780, numero_facture)
+        can.drawRightString(568, 772, numero_facture)
         
         # Finaliser le canvas
         can.save()

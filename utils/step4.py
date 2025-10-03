@@ -141,6 +141,8 @@ def step4_generate_invoice():
                         "validation": membre[mapping["Validation paiement bureau"]],
                         "adresse_facturation": adresse_facturation,
                         "adresse_livraison": adresse_livraison,
+                        # Générer un numéro de facture basé sur le nom/prénom/date
+                        "n_facture":f"N° FAC-{datetime.strptime(datetime.today().strftime('%d/%m/%Y'), '%d/%m/%Y').strftime('%y%m')}-{nom[:3].upper()}{prenom[:2].upper()}"
                     }
                     
                     try:

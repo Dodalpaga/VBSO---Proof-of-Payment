@@ -1,5 +1,6 @@
 from docxtpl import DocxTemplate
 from io import BytesIO
+from datetime import datetime
 
 def generer_facture_word(template_path, donnees):
     """
@@ -40,6 +41,7 @@ def generer_facture_word(template_path, donnees):
             "validation": donnees["validation"],
             "adresse_facturation": donnees["adresse_facturation"],
             "adresse_livraison": donnees["adresse_livraison"],
+            "n_facture": donnees["n_facture"]
         }
         
         # Générer le document
