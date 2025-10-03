@@ -5,6 +5,7 @@ import base64
 from datetime import datetime
 from utils.export_word import generer_facture_word
 from utils.export_pdf import generer_facture_pdf
+from utils.toast_manager import add_persistent_toast,display_pending_toasts
 
 def step4_generate_invoice():
     
@@ -30,21 +31,27 @@ def step4_generate_invoice():
         
         st.dataframe(membre.dropna().drop(["_search","_display"]))
         
+        creation_flag = True
+        
         # Vérifier les conditions
         if statut != "payé":
-            st.toast(
+            add_persistent_toast(
                 f"La facture ne peut pas être générée car {prenom} {nom} n'a pas effectué son paiement",
                 icon="❌",
                 duration="long"
             )
-            st.stop()
+            creation_flag = False
         
         if validation != "oui":
-            st.toast(
+            add_persistent_toast(
                 f"La facture ne peut pas être générée car la validation du paiement de {prenom} {nom} n'a pas encore été faite par le Bureau",
                 icon="❌",
                 duration="long"
             )
+            creation_flag = False
+            
+        if not creation_flag:
+            display_pending_toasts()
             st.stop()
         
         st.success("✅ Paiement effectué et validé par le bureau")
@@ -106,10 +113,9 @@ def step4_generate_invoice():
         template_exists = os.path.exists(template_path)
         
         if not template_exists:
-            st.toast(
+            add_persistent_toast(
                 f"Le fichier template '{template_path}' est introuvable dans le même dossier que l'application.",
-                icon="❌",
-                duration="long"
+                icon="❌"
             )
             st.info(f"💡 Assurez-vous que le fichier '{template_path}' se trouve dans le même répertoire que app.py")
             st.stop()
@@ -167,8 +173,17 @@ def step4_generate_invoice():
                             mime=mime_type,
                             type="primary",
                             use_container_width=True,
-                            key="download_button"  # Unique key to avoid conflicts
+                            key="download_button"
+                        )
+                        
+                        add_persistent_toast(
+                            f"✅ Facture générée avec succès pour {prenom} {nom}!",
+                            icon="🎉"
                         )
                         
                     except Exception as e:
                         st.error(f"❌ Erreur lors de la génération: {str(e)}")
+                        add_persistent_toast(
+                            f"Erreur lors de la génération: {str(e)}",
+                            icon="❌"
+                        )
