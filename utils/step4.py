@@ -99,9 +99,9 @@ def step4_generate_invoice():
         
         # Vérifier si le template existe
         if format_export == "Word (.docx)":
-            template_path = "facture_template.docx"
+            template_path = "templates/facture_template.docx"
         else:
-            template_path = "facture_template - empty.pdf"
+            template_path = "templates/facture_template - empty.pdf"
             
         template_exists = os.path.exists(template_path)
         
