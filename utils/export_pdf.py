@@ -46,7 +46,7 @@ def generer_facture_pdf(template_path, donnees):
         can.setFont("Helvetica", 11)
         can.setFillColor(colors.black)
         y = 607
-        can.drawString(28, y, f"{donnees['prenom']} {donnees['nom']}")
+        can.drawString(28, y, f"{donnees['nom_payant'].upper()} {donnees['prenom_payant'].upper()}")
         for line in donnees["adresse_livraison"].splitlines():
             y -= 12
             can.drawString(28, y, line)
@@ -55,10 +55,16 @@ def generer_facture_pdf(template_path, donnees):
         can.setFont("Helvetica", 11)
         can.setFillColor(colors.black)
         y = 607
-        can.drawString(286, y, f"{donnees['prenom']} {donnees['nom']}")
+        can.drawString(286, y, f"{donnees['nom_payant'].upper()} {donnees['prenom_payant'].upper()}")
         for line in donnees["adresse_facturation"].splitlines():
             y -= 12
             can.drawString(286, y, line)
+
+        # === PRODUIT ===
+        can.setFont("Helvetica", 14)
+        can.setFillColor(colors.black)
+        print(donnees['produit'])
+        can.drawString(28, 505, f"{donnees['produit'].upper()}")
         
         # === MONTANTS (toutes les occurrences) ===
         # Montant unitaire HT
