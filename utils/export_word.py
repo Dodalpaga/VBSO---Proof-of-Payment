@@ -11,6 +11,9 @@ def generer_facture_word(template_path, donnees):
         donnees (dict): Dictionnaire contenant les données de la facture
             - nom (str): Nom du membre
             - prenom (str): Prénom du membre
+            - nom_payant (str): Nom du payant
+            - prenom_payant (str): Prénom du payant
+            - produit (str): Produit acheté (type de licence avec ou sans assurance)
             - date_jour (str): Date du jour au format JJ/MM/AAAA
             - montant_du (float/str): Montant dû
             - moyen_paiement (str): Moyen de paiement utilisé
@@ -34,6 +37,9 @@ def generer_facture_word(template_path, donnees):
         contexte = {
             "nom": donnees["nom"],
             "prenom": donnees["prenom"],
+            "nom_payant": donnees["nom_payant"],
+            "prenom_payant": donnees["prenom_payant"],
+            "produit": donnees["produit"],
             "date_jour": donnees["date_jour"],
             "montant_du": donnees["montant_du"],
             "moyen_paiement": donnees["moyen_paiement"],

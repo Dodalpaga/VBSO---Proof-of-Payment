@@ -13,6 +13,9 @@ def generer_facture_pdf(template_path, donnees):
         donnees (dict): Dictionnaire contenant les données de la facture
             - nom (str): Nom du membre
             - prenom (str): Prénom du membre
+            - nom_payant (str): Nom du payant
+            - prenom_payant (str): Prénom du payant
+            - produit (str): Produit acheté (type de licence avec ou sans assurance)
             - date_jour (str): Date du jour au format JJ/MM/AAAA
             - montant_du (float/str): Montant dû
             - adresse_facturation (str): Adresse de facturation
@@ -43,17 +46,19 @@ def generer_facture_pdf(template_path, donnees):
         can.setFont("Helvetica", 11)
         can.setFillColor(colors.black)
         y = 607
+        can.drawString(28, y, f"{donnees['prenom']} {donnees['nom']}")
         for line in donnees["adresse_livraison"].splitlines():
-            can.drawString(28, y, line)
             y -= 12
+            can.drawString(28, y, line)
         
         # === ADRESSE DE FACTURATION ===
         can.setFont("Helvetica", 11)
         can.setFillColor(colors.black)
         y = 607
+        can.drawString(286, y, f"{donnees['prenom']} {donnees['nom']}")
         for line in donnees["adresse_facturation"].splitlines():
-            can.drawString(286, y, line)
             y -= 12
+            can.drawString(286, y, line)
         
         # === MONTANTS (toutes les occurrences) ===
         # Montant unitaire HT
@@ -81,13 +86,18 @@ def generer_facture_pdf(template_path, donnees):
         can.setFillColor(colors.black)
         can.drawRightString(70, 395, montant_str)
         
+        # Beneficiaire
+        can.setFont("Helvetica-Bold", 10)
+        can.setFillColor(colors.black)
+        can.drawRightString(260, 394, f"{donnees['nom']} {donnees['prenom']}")
+        
         # === DATES ===
         date_str = donnees["date_jour"]
         
         # Date de paiement
         can.setFont("Helvetica-Bold", 11)
         can.setFillColor(colors.black)
-        can.drawRightString(160, 394, date_str)
+        can.drawRightString(155, 394, date_str)
         
         # Date d'émission (coin droit)
         can.setFont("Helvetica-Bold", 11)
