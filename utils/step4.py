@@ -57,7 +57,27 @@ def step4_generate_invoice():
         st.success("✅ Paiement effectué et validé par le bureau")
         
         # Formulaire d'adresses
-        st.subheader("Adresses")
+        st.divider()
+        st.subheader("Informations de paiement")
+        
+        tiers_payant = st.checkbox("Tiers payant (personne différente ayant payé pour ce membre) ?", value=False, key="tiers_payant")
+        
+        if tiers_payant:
+            tiers_payant_nom = st.text_input("Nom du tiers payant", value="", key="tiers_payant_nom")
+            tiers_payant_prenom = st.text_input("Prénom du tiers payant", value="", key="tiers_payant_prenom")
+            
+        type_licence = st.selectbox(
+            options=["ADULTES","JEUNES","ENFANTS"],
+            key="produit",
+            label="Type de licence",
+            label_visibility="visible"
+        )
+        
+        assurance = st.checkbox("Assurance", value=False, key="assurance")
+            
+        produit = f"LICENCE {type_licence} {("AVEC ASSURANCE" if assurance else "SANS ASSURANCE")}"
+        
+        st.markdown(f"**Produit:** {produit}")
         
         col1, col2, col3 = st.columns([5, 1, 5])
         
@@ -96,6 +116,7 @@ def step4_generate_invoice():
                 )
         
         # Choix du format d'export
+        st.divider()
         st.subheader("Format de la facture")
         format_export = st.radio(
             "Choisissez le format d'export :",
@@ -140,6 +161,9 @@ def step4_generate_invoice():
                     donnees_facture = {
                         "nom": nom,
                         "prenom": prenom,
+                        "nom_payant": (tiers_payant_nom if tiers_payant else nom),
+                        "prenom_payant": (tiers_payant_prenom if tiers_payant else prenom),
+                        "produit": produit,
                         "date_jour": datetime.today().strftime("%d/%m/%Y"),
                         "montant_du": membre[mapping["Montant dû"]],
                         "moyen_paiement": membre[mapping["Moyen de paiement"]],
